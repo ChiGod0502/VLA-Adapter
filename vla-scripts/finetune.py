@@ -396,9 +396,10 @@ def run_forward_pass(
         multi_layer_hidden_states = []
         
         for item in output.hidden_states[0:]:
+            item = item[:, 1:-1, :]  # remove bos token and eos token
             # last_hidden_states = output.hidden_states[-1]  # (B, seq_len, D)
             # Get hidden states for text portion of prompt+response (after the vision patches)
-            text_hidden_states = item[:, num_patches:-1]
+            text_hidden_states = item[:, num_patches:, :]
             # Get hidden states for action portion of response
             batch_size = batch["input_ids"].shape[0]
             # actions_hidden_states = text_hidden_states[:, -1, :].reshape(batch_size, 1, -1).to(torch.bfloat16)
